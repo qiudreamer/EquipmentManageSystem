@@ -1,0 +1,596 @@
+/* 直接引入 home.css 的导航样式 */
+@import url("home.css");
+
+.card,.profile-card{
+  min-width: calc(100% - 1.5rem) !important;
+  margin: 1vh;
+  padding:2rem;
+  background:#fff;
+  border-radius:var(--radius);
+  box-shadow:0 .25rem 1rem rgba(0,0,0,.08);
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+}
+.card{
+  gap: 0 !important;
+  height: 70vh;
+}
+.profile-card{
+  height: 18vh;
+}
+.profile-card h2{font-size:1.25rem;font-weight:600}
+.profile-card p{color:var(--gray)}
+.profile-card button{
+  padding:.75rem;
+  border:none;
+  border-radius:var(--radius);
+  cursor:pointer;
+  width: 5rem;
+}
+#changePwdBtn{
+  background:#fff;
+  border:1px solid var(--primary);
+  color:var(--primary);
+}
+#logoutBtn{background:var(--danger);color:#fff}
+
+#ticketList{
+  list-style:none;
+  max-width:30rem;
+  margin:0 auto 1.25rem;
+}
+#ticketList li{
+  padding:.75rem 0;
+  border-bottom:1px solid #eee;
+}
+
+/* ===== 全屏滚动布局 ===== */
+body{
+  display:flex;
+  flex-direction:column;
+  height:100vh;
+  overflow-x:hidden;
+  overflow-y: auto;
+}
+.top-nav{flex:0 0 auto;}
+#mine-user-button-box{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  gap: 3rem;
+  padding: .9rem;
+}
+/* 仅纵向滚动
+/* .card{
+  flex:1 1 auto;
+  overflow-y:auto;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-y:contain;
+} */
+
+/* ===== 精致分段控制器 ===== */
+.sub-nav {
+  display: flex;
+  background: #f1f1f1;          /* 浅灰底 */
+  border-radius: var(--radius);
+  padding: 4px;
+  gap: 0;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: calc(var(--radius) - 2px);
+  font-size: .95rem;
+  font-weight: 600;
+  color: #555;
+  background: transparent;
+  cursor: pointer;
+  transition: all .25s;
+}
+
+/* 激活态 */
+.tab-btn.active {
+  background: #fff;
+  color: var(--primary);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .08);
+}
+.tab-panel {
+  display: none;
+}
+.tab-panel.active {
+  display: block;
+}
+
+#unReturnPager{
+  display: grid;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  max-height: 47vh;
+}
+
+#mine-check-equipment-pager{
+  display: grid;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  grid-template-columns: repeat(auto-fill, minmax(20.5rem, 1fr));
+  max-height: 47vh;
+  gap: 1rem;
+}
+#checkEquipmentPager{
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-direction: column;
+}
+
+
+/* ✅ 全屏遮罩层（必须放在 home.css 中） */
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+#overlay-content {
+  transform: scale(0.4);
+  transition: transform 0.35s ease;
+}
+
+#overlay.show #overlay-content {
+  transform: scale(1);
+}
+
+#overlay-close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 36px;
+  color: #fff;
+  cursor: pointer;
+}
+.profile-return-button,.profile-cancel-button{
+  padding: 10px 20px; /* 内边距 */
+  border: none; /* 无边框 */
+  border-radius: var(--radius); /* 圆角 */
+  cursor: pointer; /* 鼠标悬停时显示指针 */
+  font-size: 1rem; /* 字体大小 */
+  margin-top: 5px; /* 上边距 */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* 平滑过渡效果 */
+  outline: none; /* 点击时不显示轮廓 */
+}
+
+/* 按钮颜色 */
+.profile-return-button {
+  background-color: var(--primary); /* 主题色背景 */
+  color: #fff; /* 白色文字 */
+}
+
+/* 按钮颜色 */
+.profile-cancel-button {
+  background-color: var(--danger); /* 主题色背景 */
+  color: #fff; /* 白色文字 */
+}
+#profile-bottom-detail-box{
+  width: 100%;
+  padding: 1rem;
+}
+
+:root {
+  --brand: #0066ff;
+  --bg: #f5f7fa;
+  --radius: 10px;
+  --shadow: 0 4px 20px rgba(0, 0, 0, .06);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 40px;
+  font-weight: 500;
+  color: #333;
+  letter-spacing: .5px;
+}
+
+.mine-work-order-pager {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(23.5rem, 1fr));
+  gap: 24px;
+  overflow-x: hidden;
+  padding: 0.5rem;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  max-height: 55vh;
+  margin-bottom: 1vh;
+}
+
+.order-type-card {
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  transition: .25s;
+  border: 1px solid #ddd;
+  position: relative;
+}
+.order-card-Continue{
+  background: #fff;
+}
+.order-card-Finish,
+.order-card-Kill{
+  background: aliceblue;
+}
+
+.order-type-card:hover {
+  box-shadow: 0 8px 28px rgba(0, 0, 0, .08);
+}
+.order-type-card .order-type-id {
+  font-size: 12px;
+  color: var(--brand);
+  font-weight: 600;
+  letter-spacing: .5px;
+  margin-bottom: 8px;
+}
+.order-type-card .order-type-device-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #222;
+  flex: 1 1 auto;
+  text-align: left;
+}
+.order-type-card .order-type-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: #666;
+}
+.order-type-card .order-type-status {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .3px;
+}
+.order-type-status.Finish,
+.order-type-status.Kill{
+  background: #fff2d9;
+  color: #b37400;
+}
+
+.order-type-status.Continue {
+  background: #d9ffe0;
+  color: #008a1e;
+}
+.order-type-time-bracket {
+  display: flex;
+  align-items: flex-start;
+  margin: 12px 0;
+  font-size: 11px;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.order-type-equipment-box{
+  padding: 1.3rem 1.3rem 0 1.3rem;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.order-type-time-bracket::before {
+  left: 0;
+}
+.order-type-time-bracket::after {
+  right: 0;
+}
+.order-type-time-top,.order-type-time-bottom{
+  font-size: 0.85rem;
+  font-weight: bold;
+  white-space: pre;
+}
+.order-type-time-top .Continue {
+  color: #22c55e;
+}
+.order-type-time-bottom .Continue {
+  color: #ef4444;
+}
+.order-type-time-top .Finish,.order-type-time-bottom .Finish
+.order-type-time-top .Kill,.order-type-time-bottom .Kill {
+  color: black;
+}
+.order-type-meta-box{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+}
+.order-type-meta-user-name{
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+.order-type-equipment-detail-box{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+  align-items: center;
+}
+.order-type{
+  color: white;
+  font-weight: 700;
+  background: black;
+  padding: 0.4rem;
+  border-radius: 0.5rem;
+  font-size: 12px;
+  position: relative;
+}
+
+.order-type.equipmentProblem.Continue{
+  background: red;
+}
+.order-type.onOrPutProblem.Continue{
+  background: blue;
+}
+.order-type.borrowAndReturnProblem.Continue{
+  background: green;
+}
+
+.order-type.equipmentProblem.Finish,
+.order-type.onOrPutProblem.Finish,
+.order-type.borrowAndReturnProblem.Finish{
+  background: black;
+}
+.order-type.equipmentProblem.Finish::before, .order-type.onOrPutProblem.Finish::before, .order-type.borrowAndReturnProblem.Finish::before{
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: rgba(255,255,255, 0.4);
+  z-index: 1;
+  border-radius: 0.5rem;
+}
+
+.order-type-code{
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: deepskyblue;
+}
+.work-order-finish-icon{
+  position: absolute;
+  top: 1vh;
+  right: 14vh;
+  width: 3.2rem;
+  height: 3.2rem;
+  z-index: 1
+}
+
+.kill-mine-order-type-about-equipment {
+  height: 2rem;
+  background: lightblue;
+  border-radius: 0 0 0.5rem 0.5rem;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;/
+  cursor: pointer;
+  padding: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.kill-mine-order-type-about-equipment:hover {
+  .kill-button-text{
+    color: #fff; /* 悬停时文字颜色变亮 */
+    transform: scale(1.05); /* 悬停时稍微放大 */
+  }
+}
+
+.kill-button-text {
+  font-weight: bold;
+  font-size: 1.1rem; /* 增大字体大小 */
+  color: black; /* 更鲜艳的文字颜色 */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* 图标和文字之间的间距 */
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+@media (min-width: 30rem) {
+  #unReturnPager {
+    grid-template-columns: repeat(auto-fill, minmax(18.75rem, 1fr));
+    gap: 1.25rem;
+    padding: 1.25rem 2.5rem;
+  }
+}
+@media (max-width: 768px) {
+  #mine-work-order-pager{
+    grid-template-columns: repeat(auto-fill, minmax(18.5rem, 1fr));
+  }
+  #pager-work-order{
+    padding: 0;
+  }
+  .card{
+    padding: 1rem !important;
+  }
+  .mine-work-order-pager{
+    gap: 1vh;
+  }
+  .tab-btn{
+    padding: 1vh;
+  }
+
+  #unReturnPager{
+    grid-template-columns: repeat(auto-fill, minmax(9.375rem, 1fr));
+    gap: 1vh;
+  }
+}
+
+
+.change-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.change-button:hover {
+  background-color: #0056b3;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-content h2 {
+  margin-bottom: 20px;
+}
+
+.form-group {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  font-weight: bold;
+  width: 100px;
+  text-align: right;
+  margin-right: 10px;
+  white-space: pre;
+}
+
+.form-group input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-group-button-box{
+  display: flex;
+  justify-content: space-around;
+}
+.change-button {
+  margin: 0 5px;
+}
+
+.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.equipment-data-label-box{
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 1rem;
+}
+.equipment-data-label {
+  font-weight: bold;
+  margin-right: 5px;
+  text-wrap: nowrap;
+}
+
+/* ✅ 全屏遮罩层（必须放在 home.css 中） */
+#check-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+#check-overlay-content {
+  transform: scale(0.4);
+  transition: transform 0.35s ease;
+}
+
+#check-overlay.show #check-overlay-content {
+  transform: scale(1);
+}
+
+#check-overlay-close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 36px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.item-profile-equipment-tag{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+@media (hover: hover){
+  .card::-webkit-scrollbar{width:.5rem}
+  .card::-webkit-scrollbar-thumb{background:#ccc;border-radius:.25rem}
+  .card::-webkit-scrollbar-thumb:hover{background:#999}
+}

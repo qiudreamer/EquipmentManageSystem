@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>个人中心</title>
+  <link rel="stylesheet" href="../css/profile.css" />
+  <link rel="stylesheet" href="../css/bottom.css" />
+</head>
+<body>
+  <nav class="top-nav">
+    <span class="logo">设备管理系统</span>
+      <a href="" id="nav-equipment-list">设备列表</a>
+      <a href="" id="nav-mine-center" class="active">个人中心</a>
+  </nav>
+
+  <section class="card profile-card">
+    <h2>你好，<span id="userName"></span></h2>
+    <p>未归还设备：<b id="unReturnCnt">0</b></p>
+    <div id="mine-user-button-box">
+      <button id="changePwdBtn" onclick="changeMyPassword()">修改密码</button>
+      <button id="logoutBtn" class="danger" onclick="logOutBtn()">退出账号</button>
+    </div>
+
+  </section>
+
+  <!-- 卡片主体 -->
+  <section class="card">
+    <!-- 3个 tab 按钮 -->
+    <nav class="sub-nav">
+      <button class="tab-btn active" data-tab="unreturn">未归还设备</button>
+      <button class="tab-btn" data-tab="checkEquipment">申请中设备</button>
+      <button class="tab-btn" data-tab="tickets">我的工单</button>
+
+    </nav>
+
+    <!-- 面板 1：未归还设备 -->
+    <div id="panel-unreturn" class="tab-panel active">
+      <!-- 包裹两个 footer 的容器 -->
+      <footer class="footer-wrapper">
+        <div id="unReturnPager" class="unReturnPager scrollable"></div>
+        <div id="pager-need-wait"></div>
+      </footer>
+
+    </div>
+
+    <!-- 面板 2：申请中设备 -->
+    <div id="panel-checkEquipment" class="tab-panel">
+      <footer id="checkEquipmentPager">
+        <div id="mine-check-equipment-pager" class="mine-check-equipment-pager scrollable"></div>
+        <div id="pager-check-equipment"></div>
+      </footer>
+    </div>
+
+
+    <!-- 面板 3：我的工单 -->
+    <div id="panel-tickets" class="tab-panel">
+      <footer id="ticketPager">
+        <div id="mine-work-order-pager" class="mine-work-order-pager scrollable"></div>
+        <div id="pager-work-order"></div>
+      </footer>
+    </div>
+
+
+  </section>
+
+  <!-- 遮罩层，初始隐藏 -->
+  <div id="overlay">
+    <!-- 关闭按钮 -->
+    <div id="overlay-close">×</div>
+    <!-- 放大区域 -->
+    <div id="overlay-content"></div>
+  </div>
+
+
+  <div id="overlay-change-password" class="overlay hidden"></div>
+
+  <div id="passwordModal" class="modal hidden">
+    <div class="modal-content">
+      <h2>更改密码</h2>
+        <div class="form-group">
+          <label for="newPassword">输入新密码：</label>
+          <input type="password" id="newPassword" name="newPassword" required>
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">确认新密码：</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" required>
+        </div>
+        <div class="form-group-button-box">
+          <button type="button" class="change-button" id="submitBtn" onclick="submitChangePasswordData()">提交</button>
+          <button type="button" class="change-button" id="cancelBtn" onclick="hideModal()">取消</button>
+        </div>
+    </div>
+  </div>
+
+  <!-- 遮罩层，初始隐藏 -->
+  <div id="check-overlay">
+    <!-- 关闭按钮 -->
+    <div id="check-overlay-close">×</div>
+    <!-- 放大区域 -->
+    <div id="check-overlay-content"></div>
+  </div>
+
+  <script src="../socket_js/sockjs.min.js"></script>
+  <script src="../socket_js/stomp.min.js"></script>
+  <script src="../js/allHref.js"></script>
+  <script src="../js/showCustom.js"></script>
+  <script src="../js/getData.js"></script>
+  <script src="../js/profile.js"></script>
+  <script src="../js/bottom.js"></script>
+</body>
+</html>

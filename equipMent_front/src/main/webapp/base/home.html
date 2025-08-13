@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"/>
+    <title>设备列表</title>
+    <link rel="stylesheet" type="text/css" href="../css/home.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/bottom.css"/>
+</head>
+<body>
+<nav class="top-nav">
+    <span class="logo">设备管理系统</span>
+    <a href="" class="active" id="nav-equipment-list">设备列表</a>
+    <a href="" id="nav-mine-center">个人中心</a>
+</nav>
+
+<!-- 搜索区 -->
+<header class="toolbar">
+    <div id="home-input-search-box">
+        <input id="searchInput" placeholder="搜索 …"/>
+        <button id="searchBtn" onclick="searchEquipment()">🔍</button>
+    </div>
+    <select id="searchType">
+        <option value="equipmentName">设备名称</option>
+        <option value="equipmentCode">设备编号</option>
+        <option value="equipmentLabel">全部标签</option>
+    </select>
+</header>
+
+<!-- 网格展示区 -->
+<main id="grid" class="grid"></main>
+
+<!-- 分页 -->
+<footer id="pager-home"></footer>
+
+<!-- 遮罩层，初始隐藏 -->
+<div id="overlay">
+    <!-- 关闭按钮 -->
+    <div id="overlay-close">×</div>
+    <!-- 放大区域 -->
+    <div id="overlay-content"></div>
+</div>
+
+
+<div id="get-equipment-request" class="get-equipment-request" onclick="getEquipmentBoxRemove(event)">
+    <div class="get-equipment-request-box">
+        <h4>借出设备申请</h4>
+        <p><strong>借出人姓名：</strong><span id="get-equipment-request-user-name"></span></p>
+        <p><strong>借出设备名称：</strong><span id="get-equipment-request-device-name"></span></p>
+        <p><strong>借出设备编号：</strong><span id="get-equipment-request-device-code"></span></p>
+        <p>
+            <div class="get-equipment-request-reason-box">
+                <strong>借出原因(最多100字): </strong>
+                <div id="get-equipment-request-text-counter" class="counter">0/100</div>
+            </div>
+            <textarea name="desc" id="get-equipment-request-reason" class="get-equipment-request-reason" maxlength="100" oninput="limitDesc(this)"></textarea>
+
+        </p>
+        <div class="get-equipment-request-button-box">
+            <button id="get-equipment-request-ok" class="nervous-btn">确定</button>
+            <button id="get-equipment-request-cancel" class="nervous-btn" onclick="getEquipmentBoxRemove(event)">取消</button>
+        </div>
+
+    </div>
+</div>
+
+<div id="nervousModal" class="nervous-modal">
+    <div class="nervous-box">
+        <h4>紧急借用信息</h4>
+        <p><strong>借出人姓名：</strong><span id="nervous-name"></span></p>
+        <p><strong>借出设备名称：</strong><span id="nervous-device"></span></p>
+        <p><strong>借出设备编号：</strong><span id="nervous-id"></span></p>
+        <p><strong>借出时间：</strong><span id="nervous-time"></span></p>
+        <button id="nervous-ok" class="nervous-btn">确定</button>
+    </div>
+</div>
+
+
+<script src="../socket_js/sockjs.min.js"></script>
+<script src="../socket_js/stomp.min.js"></script>
+<script src="../js/allHref.js"></script>
+<script src="../js/getData.js"></script>
+<script src="../js/bottom.js"></script>
+<script src="../js/home.js"></script>
+<script src="../js/showCustom.js"></script>
+
+
+<script type="text/javascript">
+
+
+</script>
+</body>
+</html>
