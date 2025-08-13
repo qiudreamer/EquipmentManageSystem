@@ -1,0 +1,19 @@
+#  application-dev.yml>application.yml>application-pro.yml
+server:
+  servlet:
+    context-path: /
+  port: 9998
+spring:
+  mvc:
+    servlet:
+      load-on-startup: 1
+    view:
+      prefix: /
+      suffix: .html
+    banner:
+      location: classpath:banner.txt
+
+
+#spring:
+#  profiles:
+#    active: dev

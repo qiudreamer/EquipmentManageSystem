@@ -1,0 +1,51 @@
+/* ========= 基础变量 & 重置 ========= */
+:root{
+  --primary:#2b74ff;
+  --bg:#f5f5f7;
+  --radius:.75rem;      /* 12px */
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
+html{font-size:16px;}   /* 人为基准 */
+body{
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,#e0eafc,#cfdef3);
+}
+
+/* ========= 手机端（≤480px） ========= */
+.login-card{
+  width:18.75rem;       /* 300px */
+  padding:2.5rem 1.5rem;
+  border-radius:var(--radius);
+  background:#fff;
+  box-shadow:0 .5rem 2rem rgba(0,0,0,.08);
+  display:flex;
+  flex-direction:column;
+  gap:1.25rem;
+}
+.login-card h2{font-size:1.5rem;text-align:center;font-weight:600}
+.login-card input{
+  padding:.875rem 1rem;
+  border:1px solid #ddd;
+  border-radius:var(--radius);
+  font-size:1rem;
+}
+.login-card button{
+  padding:.875rem;
+  border:none;
+  border-radius:var(--radius);
+  background:var(--primary);
+  color:#fff;
+  font-size:1rem;
+  cursor:pointer;
+}
+
+/* ========= 桌面端（>480px） ========= */
+@media (min-width:30rem){
+  .login-card{
+    width:21.25rem;    /* 340px */
+    padding:3rem 2.5rem;
+  }
+}
