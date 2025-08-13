@@ -1,0 +1,17 @@
+#  properties>yml
+#  application-dev.yml>application.yml>application-pro.yml
+server:
+  servlet:
+    context-path: /equipmentmanagement
+  port: 9999
+spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+  datasource:
+    url: jdbc:mysql://localhost:3306/equipment?useUnicode=true&characterEncoding=utf-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: Qq1243139737!!!
+
