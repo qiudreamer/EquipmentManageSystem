@@ -34,4 +34,6 @@ public interface DeviceService {
     ReturnStatus agreeEquipmentCheck(String data);
 
     ReturnStatus revokeEquipmentCheck(String data);
+
+    ReturnStatus searchCheck(String data);
 }

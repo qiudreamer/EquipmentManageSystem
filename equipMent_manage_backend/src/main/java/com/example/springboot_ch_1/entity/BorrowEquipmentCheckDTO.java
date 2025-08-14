@@ -13,6 +13,7 @@ import lombok.Data;
 @Data
 public class BorrowEquipmentCheckDTO {
     private String checkId;
+    private String userName;
     private String equipmentImg;
     private String equipmentName;
     private String equipmentCode;

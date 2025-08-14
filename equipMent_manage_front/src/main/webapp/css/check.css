@@ -22,7 +22,7 @@
 .equipment-data-label {
     font-weight: bold;
     margin-right: 5px;
-    text-wrap: nowrap;
+    white-space: nowrap;
 }
 
 

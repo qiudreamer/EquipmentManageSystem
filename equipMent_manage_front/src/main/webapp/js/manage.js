@@ -20,6 +20,7 @@ const gird = document.getElementById("grid");
 function searchEquipment(){
     let selectedValue = document.getElementById("searchType");
     let searchInput = document.getElementById("searchInput");
+    searchInput.value = searchInput.value.trim()
     let data = {
         "nowPage": 0,
         "needCount": articlePageSize,
@@ -35,7 +36,7 @@ function searchEquipment(){
                 gird.innerHTML = "";
                 console.log(responseText)
                 addEquipmentPageData(responseText)
-                addLabelSearchBottom(responseText['returnData']['nowPage'],responseText['returnData']['allPage'],"pager-home", responseText['returnData']['searchName'],responseText['returnData']['searchLabel'])
+                addLabelSearchBottom(responseText['returnData']['nowPage'],responseText['returnData']['allPage'],"pager-home", responseText['returnData']['searchName'],responseText['returnData']['searchLabel'],"equipment")
                 showCustomMessage(responseText['reason'],"yes")
             } else {
                 showCustomMessage(responseText['reason'])

@@ -42,6 +42,7 @@ function createPageDiv(text, href, fatherDiv, type) {
 function getPageData(nowPage, type) {
     if (type === "equipmentPageData"){
         let data= {
+            "checkRootAccount": localStorageUserData['userAccount'],
             "nowPage": nowPage,
             "needCount": articlePageSize
         }
@@ -59,8 +60,30 @@ function getPageData(nowPage, type) {
             .catch((error) => {
                 showCustomMessage("数据请求失败");
             });
+    }else if (type === "borrowCheckPageData"){
+        let data = {
+            "nowPage": 0,
+            "needCount": checkEquipmentPageSize,
+            "checkRootAccount": localStorageUserData['userAccount']
+        }
+        postData(local_href + local_equipment_tag + "/getAllCheckEquipment", JSON.stringify(data))
+            .then((responseText) => {
+                console.log(responseText)
+                if (responseText['code'] === "yes") {
+                    addCheckEquipmentProfile(responseText)
+                    addBottom(responseText['returnData']['nowPage'], responseText['returnData']['allPage'], responseText['returnData']['tyData'], "pager-home")
+                }else if (responseText['code'] === "kill"){
+                    killHaveLoginAdmin(responseText['reason'])
+                }else {
+                    showCustomMessage(responseText['reason'])
+                }
+            })
+            .catch((error) => {
+                showCustomMessage("数据请求失败");
+            });
     }else if (type === "userPageData"){
         let data ={
+            "checkRootAccount": localStorageUserData['userAccount'],
             "userAccount": localStorageUserData['userAccount'],
             "nowPage": nowPage,
             "needCount": userPageSize,
@@ -82,6 +105,7 @@ function getPageData(nowPage, type) {
             });
     }else if (type === "orderPageData"){
         let data ={
+            "checkRootAccount": localStorageUserData['userAccount'],
             "nowPage": nowPage,
             "needCount": workOrderPageSize,
         }
@@ -108,66 +132,111 @@ function getPageData(nowPage, type) {
 
 
 
-function addLabelSearchBottom(nowPage, allPage, adderId, searchName, searchLabel) {
+function addLabelSearchBottom(nowPage, allPage, adderId, searchName, searchLabel, searchType) {
     let bottomPage = document.getElementById(adderId);
     bottomPage.innerHTML = "";
     if (allPage > 0) {
-        createLabelPageDiv("首页", 0, bottomPage, searchName, searchLabel);
+        createLabelPageDiv("首页", 0, bottomPage, searchName, searchLabel, searchType);
         if (nowPage === 1 || nowPage === 0) {
             for (let i = nowPage; i <= allPage && i <= 3; i++) {
-                createLabelPageDiv(i, i - 1, bottomPage, searchName, searchLabel);
+                createLabelPageDiv(i, i - 1, bottomPage, searchName, searchLabel, searchType);
             }
         } else if (nowPage === allPage) {
             if (allPage - 2 >= 1) {
-                createLabelPageDiv(allPage - 2, allPage - 3, bottomPage, searchName, searchLabel);
+                createLabelPageDiv(allPage - 2, allPage - 3, bottomPage, searchName, searchLabel, searchType);
             }
             if (allPage - 1 >= 1) {
-                createLabelPageDiv(allPage - 1, allPage - 2, bottomPage, searchName, searchLabel);
+                createLabelPageDiv(allPage - 1, allPage - 2, bottomPage, searchName, searchLabel, searchType);
             }
             if (allPage >= 1) {
-                createLabelPageDiv(allPage, allPage - 1, bottomPage, searchName, searchLabel);
+                createLabelPageDiv(allPage, allPage - 1, bottomPage, searchName, searchLabel, searchType);
             }
 
         } else {
-            createLabelPageDiv(nowPage - 1, nowPage - 2, bottomPage, searchName, searchLabel);
-            createLabelPageDiv(nowPage, nowPage - 1, bottomPage, searchName, searchLabel);
-            createLabelPageDiv(nowPage + 1, nowPage, bottomPage, searchName, searchLabel);
+            createLabelPageDiv(nowPage - 1, nowPage - 2, bottomPage, searchName, searchLabel, searchType);
+            createLabelPageDiv(nowPage, nowPage - 1, bottomPage, searchName, searchLabel, searchType);
+            createLabelPageDiv(nowPage + 1, nowPage, bottomPage, searchName, searchLabel, searchType);
         }
-        createLabelPageDiv("尾页", allPage - 1, bottomPage, searchName, searchLabel);
+        createLabelPageDiv("尾页", allPage - 1, bottomPage, searchName, searchLabel, searchType);
     }
 }
 
-function createLabelPageDiv(text, href, fatherDiv, searchName, searchLabel) {
+function createLabelPageDiv(text, href, fatherDiv, searchName, searchLabel, searchType) {
     let pageDiv = document.createElement("div");
     pageDiv.classList = "bottom-div"
     pageDiv.addEventListener("click", (event) => {
         event.preventDefault();
-        getAllLabelPageData(href, searchName, searchLabel)
+        getAllLabelPageData(href, searchName, searchLabel, searchType)
     });
     pageDiv.textContent = text
     fatherDiv.appendChild(pageDiv);
 }
 
-function getAllLabelPageData(nowPage, searchName, searchLabel) {
-    let data= {
-        "nowPage": nowPage,
-        "needCount": articlePageSize,
-        "searchInput": searchName,
-        "selectedValue": searchLabel
+function getAllLabelPageData(nowPage, searchName, searchLabel, searchType) {
+    if (searchType === "equipment"){
+        let data= {
+            "checkRootAccount": localStorageUserData['userAccount'],
+            "nowPage": nowPage,
+            "needCount": articlePageSize,
+            "searchInput": searchName,
+            "selectedValue": searchLabel
+        }
+        console.log(data)
+        postData(local_href + local_equipment_tag + "/searchEquipment", JSON.stringify(data))
+            .then((responseText) => {
+                if (responseText['code'] === "yes") {
+                    gird.innerHTML = "";
+                    console.log(responseText)
+                    addEquipmentPageData(responseText)
+                    if (responseText['returnData']['ifHaveSearch'] === "yes"){
+                        console.log("equipment_have_search_yes")
+                        addLabelSearchBottom(responseText['returnData']['nowPage'],responseText['returnData']['allPage'],"pager-home", responseText['returnData']['searchName'],responseText['returnData']['searchLabel'], "equipment")
+                    }else{
+                        console.log("equipment_have_search_no")
+                        addBottom(responseText['returnData']['nowPage'],responseText['returnData']['allPage'],responseText['returnData']['tyData'],"pager-home")
+                    }
+                } else {
+                    showCustomMessage(responseText['reason'])
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+                showCustomMessage("数据请求失败");
+            });
+    }else if (searchType === "check"){
+        let data= {
+            "checkRootAccount": localStorageUserData['userAccount'],
+            "nowPage": nowPage,
+            "needCount": checkEquipmentPageSize,
+            "searchInput": searchName,
+            "selectedValue": searchLabel
+        }
+        console.log(data)
+        postData(local_href + local_equipment_tag + "/searchCheck", JSON.stringify(data))
+            .then((responseText) => {
+                if (responseText['code'] === "yes") {
+                    mineCheckEquipmentPager.innerHTML = "";
+                    console.log(responseText)
+                    addCheckEquipmentProfile(responseText)
+                    if (responseText['returnData']['ifHaveSearch'] === "yes"){
+                        console.log("check_have_search_yes")
+                        addLabelSearchBottom(responseText['returnData']['nowPage'],responseText['returnData']['allPage'],"pager-home", responseText['returnData']['searchName'],responseText['returnData']['searchLabel'], "check")
+                    }else{
+                        console.log("check_have_search_no")
+                        addBottom(responseText['returnData']['nowPage'],responseText['returnData']['allPage'],responseText['returnData']['tyData'],"pager-home")
+                    }
+                } else {
+                    showCustomMessage(responseText['reason'])
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+                showCustomMessage("数据请求失败");
+            });
+    }else if (searchType === "user"){
+
+    }else if (searchType === "order"){
+
     }
-    console.log(data)
-    postData(local_href + local_equipment_tag + "/searchEquipment", JSON.stringify(data))
-        .then((responseText) => {
-            if (responseText['code'] === "yes") {
-                gird.innerHTML = "";
-                console.log(responseText)
-                addEquipmentPageData(responseText)
-                addLabelSearchBottom(responseText['returnData']['nowPage'],responseText['returnData']['allPage'],"pager-home", responseText['returnData']['searchName'],responseText['returnData']['searchLabel'])
-            } else {
-                showCustomMessage(responseText['reason'])
-            }
-        })
-        .catch((error) => {
-            showCustomMessage("数据请求失败");
-        });
+
 }

@@ -75,4 +75,9 @@ public class EquipController {
         return deviceService.agreeEquipmentCheck(data);
     }
 
+    @PostMapping("/searchCheck")
+    private ReturnStatus searchCheck(@RequestBody String data){
+        return deviceService.searchCheck(data);
+    }
+
 }

@@ -6,6 +6,36 @@ const checkOverlayContent = document.getElementById("check-overlay-content")
 const checkOverlay = document.getElementById("check-overlay")
 
 
+function searchCheck(){
+    let selectedValue = document.getElementById("searchType");
+    let searchInput = document.getElementById("searchInput");
+    let data = {
+        "nowPage": 0,
+        "needCount": articlePageSize,
+        "searchInput":searchInput.value,
+        "selectedValue":selectedValue.value
+    }
+
+    console.log(data)
+
+    postData(local_href + local_equipment_tag + "/searchCheck", JSON.stringify(data))
+        .then((responseText) => {
+            console.log(responseText)
+            if (responseText['code'] === "yes") {
+                mineCheckEquipmentPager.innerHTML = "";
+                console.log(responseText)
+                addCheckEquipmentProfile(responseText)
+                addLabelSearchBottom(responseText['returnData']['nowPage'],responseText['returnData']['allPage'],"pager-home", responseText['returnData']['searchName'],responseText['returnData']['searchLabel'],"check")
+                showCustomMessage(responseText['reason'],"yes")
+            } else {
+                showCustomMessage(responseText['reason'])
+            }
+        })
+        .catch((error) => {
+            console.log(error)
+            showCustomMessage("数据请求失败");
+        });
+}
 function getAllCheckEquipment(){
     let data = {
         "nowPage": 0,
@@ -40,6 +70,10 @@ function addCheckEquipmentProfile(responseText) {
                         <div class="item">
                             <img class="item-profile-equipment-img" src="${responseText['returnData']['checkEquipmentList'][i]['equipmentImg']}" alt="${responseText['returnData']['checkEquipmentList'][i]['equipmentName']}">
                             <footer>
+                             <div class="equipment-data-label-box">
+                                    <span class="equipment-data-label">借用人员:</span>
+                                    <span class="item-profile-equipment-name">${responseText['returnData']['checkEquipmentList'][i]['userName']}</span>
+                            </div>
                             <div class="equipment-data-label-box">
                                     <span class="equipment-data-label">设备名称:</span>
                                     <span class="item-profile-equipment-name">${responseText['returnData']['checkEquipmentList'][i]['equipmentName']}</span>

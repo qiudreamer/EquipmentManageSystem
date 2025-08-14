@@ -507,6 +507,7 @@ body {
 .equipment-data-label {
     font-weight: bold;
     margin-right: 5px;
+    white-space: nowrap;
 }
 
 .equipment-data-tags {

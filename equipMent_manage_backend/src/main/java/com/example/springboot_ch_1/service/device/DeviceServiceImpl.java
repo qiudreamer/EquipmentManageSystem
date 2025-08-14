@@ -132,7 +132,10 @@ public class DeviceServiceImpl implements DeviceService {
             List<Device> deviceList;
             System.out.println(searchInput);
             System.out.println(selectedValue);
-            if (!searchInput.trim().isEmpty()) {
+
+            JSONObject returnJson = new JSONObject();
+
+            if (searchInput!=null && !searchInput.trim().isEmpty()) {
                 switch (selectedValue) {
                     case "equipmentName":
                         deviceList = deviceRepository.findAllByEquipmentNameLikeOrderByEquipmentOutOrOnStatusAscEquipmentCreateTimeDesc("%" + searchInput + "%", pageRequest);
@@ -154,24 +157,27 @@ public class DeviceServiceImpl implements DeviceService {
                         totalPages = deviceRepository.count();
                         page = ShortIdGenerator.getPage(totalPages, pageRequest);
                         break;
-
                 }
+                returnJson.set("ifHaveSearch","yes");
+                returnJson.set("searchName", searchInput);
+                returnJson.set("searchLabel", selectedValue);
             } else {
                 deviceList = deviceRepository.findAllByOrderByEquipmentOutOrOnStatusAscEquipmentCreateTimeDesc(pageRequest);
                 totalPages = deviceRepository.count();
                 page = ShortIdGenerator.getPage(totalPages, pageRequest);
+                returnJson.set("ifHaveSearch","no");
+                returnJson.set("tyData","equipmentPageData");
             }
 
-            JSONObject returnJson = new JSONObject();
             returnJson.set("allPage", page);
             returnJson.set("nowPage", nowPage + 1);
             List<Device> returnList = getModifyDevices(deviceList);
             returnJson.set("deviceList", new JSONArray(returnList));
-            returnJson.set("searchName", searchInput);
-            returnJson.set("searchLabel", selectedValue);
+
             ReturnStatus returnStatus = new ReturnStatus("yes", "获取成功");
             returnStatus.setReturnData(returnJson);
             return returnStatus;
+
         } catch (Exception e) {
             // 4. 记录异常日志
             e.printStackTrace();
@@ -641,6 +647,70 @@ public class DeviceServiceImpl implements DeviceService {
         }
     }
 
+    @Override
+    public ReturnStatus searchCheck(String data) {
+        try {
+            JSONObject getEquipJson = new JSONObject(data);
+
+            int needCount = getEquipJson.getInt("needCount");
+            int nowPage = getEquipJson.getInt("nowPage");
+            String searchInput = getEquipJson.getStr("searchInput");
+            String selectedValue = getEquipJson.getStr("selectedValue");
+
+            PageRequest pageRequest = PageRequest.of(nowPage, needCount);
+            long totalPages;
+            long page;
+            List<BorrowEquipmentCheck> deviceList;
+            System.out.println(searchInput);
+            System.out.println(selectedValue);
+
+            JSONObject returnJson = new JSONObject();
+
+            if (searchInput!=null && !searchInput.trim().isEmpty()) {
+                switch (selectedValue) {
+                    case "userAccount":
+                        deviceList = borrowEquipmentCheckRepository.findAllByUserIdLikeOrderByCheckTimeDesc("%" + searchInput + "%", pageRequest);
+                        totalPages = borrowEquipmentCheckRepository.countByUserIdLike("%" + searchInput + "%");
+                        page = ShortIdGenerator.getPage(totalPages, pageRequest);
+                        break;
+                    case "equipmentId":
+                        deviceList = borrowEquipmentCheckRepository.findAllByEquipmentIdLikeOrderByCheckTimeDesc("%" + searchInput + "%", pageRequest);
+                        totalPages = borrowEquipmentCheckRepository.countByEquipmentIdLike("%" + searchInput + "%");
+                        page = ShortIdGenerator.getPage(totalPages, pageRequest);
+                        break;
+                    default:
+                        deviceList = borrowEquipmentCheckRepository.findAllByOrderByCheckTimeDesc(pageRequest);
+                        totalPages = borrowEquipmentCheckRepository.count();
+                        page = ShortIdGenerator.getPage(totalPages, pageRequest);
+                        break;
+                }
+                returnJson.set("ifHaveSearch","yes");
+                returnJson.set("searchName", searchInput);
+                returnJson.set("searchLabel", selectedValue);
+            } else {
+                deviceList = borrowEquipmentCheckRepository.findAllByOrderByCheckTimeDesc(pageRequest);
+                totalPages = borrowEquipmentCheckRepository.count();
+                page = ShortIdGenerator.getPage(totalPages, pageRequest);
+                returnJson.set("ifHaveSearch","no");
+                returnJson.set("tyData","borrowCheckPageData");
+            }
+
+            returnJson.set("allPage", page);
+            returnJson.set("nowPage", nowPage + 1);
+            List<BorrowEquipmentCheckDTO> returnList = getModifyCheckDevices(deviceList);
+            returnJson.set("checkEquipmentList", new JSONArray(returnList));
+
+            ReturnStatus returnStatus = new ReturnStatus("yes", "获取成功");
+            returnStatus.setReturnData(returnJson);
+            return returnStatus;
+        } catch (Exception e) {
+            // 4. 记录异常日志
+            e.printStackTrace();
+            // 5. 返回一个安全、统一的错误结果
+            return new ReturnStatus("no", "服务器内部异常，请稍后再试");
+        }
+    }
+
 
     public void borrowEquipment(String equipmentId, String userAccount) {
         User checkUser = userRepository.findByUserAccount(userAccount);
@@ -732,10 +802,13 @@ public class DeviceServiceImpl implements DeviceService {
             for (int i = 0; i < deviceList.size(); i++) {
                 BorrowEquipmentCheck borrowEquipmentCheck = deviceList.get(i);
                 String equipmentId = borrowEquipmentCheck.getEquipmentId();
+                String userAccount = borrowEquipmentCheck.getUserId();
                 Device device = deviceRepository.findByEquipmentId(equipmentId);
+                User user = userRepository.findByUserAccount(userAccount);
 
                 BorrowEquipmentCheckDTO borrowEquipmentCheckDTO = new BorrowEquipmentCheckDTO();
                 borrowEquipmentCheckDTO.setEquipmentCode(device.getEquipmentCode());
+                borrowEquipmentCheckDTO.setUserName(user.getUserName());
                 borrowEquipmentCheckDTO.setEquipmentImg(device.getEquipmentImg());
                 borrowEquipmentCheckDTO.setEquipmentName(device.getEquipmentName());
                 borrowEquipmentCheckDTO.setCheckId(borrowEquipmentCheck.getCheckId());

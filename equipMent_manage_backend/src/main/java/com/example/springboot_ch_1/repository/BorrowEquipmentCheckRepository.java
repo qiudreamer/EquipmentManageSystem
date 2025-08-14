@@ -20,4 +20,10 @@ public interface BorrowEquipmentCheckRepository extends JpaRepository<BorrowEqui
 
     List<BorrowEquipmentCheck> findAllByOrderByCheckTimeDesc(PageRequest pageRequest);
 
+    List<BorrowEquipmentCheck> findAllByUserIdLikeOrderByCheckTimeDesc(String userId, PageRequest pageRequest);
+    List<BorrowEquipmentCheck> findAllByEquipmentIdLikeOrderByCheckTimeDesc(String userId, PageRequest pageRequest);
+
+    long countByUserIdLike(String userId);
+    long countByEquipmentIdLike(String equipmentId);
+
 }

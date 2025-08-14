@@ -147,7 +147,7 @@ function searchUser(){
                 grid.innerHTML = "";
                 console.log(responseText)
                 addUserPageData(responseText)
-                addLabelSearchBottom(responseText['returnData']['nowPage'],responseText['returnData']['allPage'],"pager-home", responseText['returnData']['searchName'],responseText['returnData']['searchLabel'])
+                addLabelSearchBottom(responseText['returnData']['nowPage'],responseText['returnData']['allPage'],"pager-home", responseText['returnData']['searchName'],responseText['returnData']['searchLabel'],"user")
                 showCustomMessage(responseText['reason'],"yes")
             } else {
                 showCustomMessage(responseText['reason'])
