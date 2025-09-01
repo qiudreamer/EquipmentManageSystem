@@ -21,18 +21,18 @@
 
             <div class="manage-button-box">
                 <select id="searchType">
-                    <option value="equipmentName">工单id</option>
-                    <option value="equipmentCode">用户id</option>
-                    <option value="equipmentLabel">设备id</option>
+                    <option value="allSearchType">全部类型</option>
+                    <option value="userName">用户名称</option>
+                    <option value="equipmentName">设备名称</option>
                 </select>
                 <select id="searchOrderType">
-                    <option value="allEquipment">全部类型</option>
+                    <option value="allSearchOrderType">全部类型</option>
                     <option value="borrowAndReturnProblem">设备借还类型</option>
                     <option value="onOrPutProblem">设备上下架类型</option>
                     <option value="deleteEquipment">设备删除类型</option>
                     <option value="equipmentProblem">设备异常类型</option>
                 </select>
-                <button id="searchBtn" onclick="searchEquipment()">搜索设备</button>
+                <button id="searchBtn" onclick="searchOrder()">搜索工单</button>
             </div>
 
         </div>
@@ -80,6 +80,12 @@
                     <div class="device-code">设备编号: <span id="device-code-value"></span></div>
                     <div class="device-desc">设备简介: <span id="device-desc-value"></span></div>
                     <div class="device-tags">设备标签: <span id="device-tags-value"></span></div>
+                </div>
+
+                <!-- 设备信息盒子 -->
+                <div class="order-device-problem-info" id="order-device-problem-info">
+                    <div class="problem-type">申报类型: <span id="device-problem-type-value"></span></div>
+                    <div class="problem-reason">申报原因: <span id="device-problem-reason-value"></span></div>
                 </div>
             </div>
 

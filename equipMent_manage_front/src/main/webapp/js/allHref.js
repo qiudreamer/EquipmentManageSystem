@@ -1,7 +1,11 @@
-const local_manage_backend_href = "http://localhost:9999";
-const local_manage_front_href = "http://localhost:9998";
-
-const local_backend_href = "http://localhost:7777";
+// 本地部署
+// const local_manage_backend_href = "http://localhost:9999";
+// const local_manage_front_href = "http://localhost:9998";
+// const local_backend_href = "http://localhost:7777";
+// 服务器部署
+const local_manage_backend_href = "http://10.0.0.143:9999";
+const local_manage_front_href = "http://10.0.0.143:9998";
+const local_backend_href = "http://10.0.0.143:7777";
 
 const local_href = local_manage_backend_href+ "/equipmentmanagement";
 const local_login_success_page = local_manage_front_href+"/home";
@@ -12,7 +16,7 @@ const local_steward_tag = "/steward";
 const local_order_tag = "/profile";
 
 const socket_manage_backend = local_manage_backend_href+"/equipmentmanagement/ws";
-const socket_backend = local_backend_href+"/equipmentmanagement/ws";
+const socket_backend = local_backend_href+"/equipment/ws";
 
 function checkIfLoginToPass() {
     if (localStorage.getItem("user") !== null) {

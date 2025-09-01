@@ -183,7 +183,7 @@ body {
     cursor: pointer;
     padding: 0.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 10000;
+    z-index: 1;
     position: relative;
 }
 .kill-mine-order-type-about-equipment:hover {
@@ -214,8 +214,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
     transition: background-color 0.3s ease;
+    z-index: 10000;
 }
 
 /* 最外层容器样式 */
@@ -265,7 +265,7 @@ body {
 }
 
 /* 左侧操作人信息盒子样式 */
-.order-operator-info,.order-device-info {
+.order-operator-info,.order-device-info,.order-device-problem-info {
     width: 45%;
     text-align: left;
     display: flex;
@@ -315,6 +315,18 @@ body {
     background-color: #e03e40;
 }
 
+
+.order-device-problem-info{
+    display: none;
+}
+.show{
+    display: block;
+}
+
+#device-problem-reason-value{
+    font-size: 0.85rem;
+}
+
 @media (min-width: 30rem) {
     .order-device-img{
         height: 12.75rem;
@@ -329,7 +341,7 @@ body {
     .order-details{
         flex-direction: column;
     }
-    .order-operator-info,.order-device-info{
+    .order-operator-info,.order-device-info,.order-device-problem-info{
         width: 100%;
     }
     .order-device-img{

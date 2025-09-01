@@ -24,6 +24,9 @@ public interface DeviceRepository extends JpaRepository<Device, String>, JpaSpec
     List<Device> findAllByEquipmentNameLikeOrderByEquipmentOutOrOnStatusAscEquipmentCreateTimeDesc(String equipmentName, PageRequest pageRequest);
     List<Device> findAllByEquipmentCodeLikeOrderByEquipmentOutOrOnStatusAscEquipmentCreateTimeDesc(String equipmentCode, PageRequest pageRequest);
     List<Device> findAllByEquipmentTagLikeOrderByEquipmentOutOrOnStatusAscEquipmentCreateTimeDesc(String equipmentTag, PageRequest pageRequest);
+
+    List<Device> findAllByEquipmentNameLikeOrderByEquipmentCreateTimeDesc(String equipmentName, PageRequest pageRequest);
+    List<Device> findAllByEquipmentNameLikeOrderByEquipmentCreateTimeDesc(String equipmentName);
     long countByEquipmentNameLikeOrderByEquipmentCreateTimeDesc(String equipmentName);
     long countByEquipmentCodeLikeOrderByEquipmentCreateTimeDesc(String equipmentName);
     long countByEquipmentTagLikeOrderByEquipmentCreateTimeDesc(String equipmentName);

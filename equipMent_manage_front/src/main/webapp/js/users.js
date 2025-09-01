@@ -133,6 +133,9 @@ function searchUser(){
 
     let selectedValue = document.getElementById("searchType");
     let searchInput = document.getElementById("searchInput");
+
+    searchInput.value = searchInput.value.replace(/\s+/g, "")
+
     let data = {
         "nowPage": 0,
         "needCount": userPageSize,
@@ -140,15 +143,19 @@ function searchUser(){
         "selectedValue":selectedValue.value,
         "checkUserAccount": localStorageUserData['userAccount']
     }
-
     postData(local_href + local_steward_tag + "/searchUser", JSON.stringify(data))
         .then((responseText) => {
             if (responseText['code'] === "yes") {
                 grid.innerHTML = "";
                 console.log(responseText)
                 addUserPageData(responseText)
-                addLabelSearchBottom(responseText['returnData']['nowPage'],responseText['returnData']['allPage'],"pager-home", responseText['returnData']['searchName'],responseText['returnData']['searchLabel'],"user")
-                showCustomMessage(responseText['reason'],"yes")
+                if (responseText['returnData']['ifHaveSearch'] === "yes"){
+                    console.log("equipment_have_search_yes")
+                    addLabelSearchBottom(responseText['returnData']['nowPage'],responseText['returnData']['allPage'],"pager-home", responseText['returnData']['searchName'],responseText['returnData']['searchLabel'], "user")
+                }else{
+                    console.log("equipment_have_search_no")
+                    addBottom(responseText['returnData']['nowPage'],responseText['returnData']['allPage'],responseText['returnData']['tyData'],"pager-home")
+                }
             } else {
                 showCustomMessage(responseText['reason'])
             }

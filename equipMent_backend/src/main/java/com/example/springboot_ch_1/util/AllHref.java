@@ -17,6 +17,7 @@ import java.time.LocalDate;
 public class AllHref {
     public static String front_url1 = "http://localhost:7778";
     public static String front_url2 = "http://localhost:7777";
+    public static String front_url3 = "http://localhost:9998";
 
 
 

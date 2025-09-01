@@ -40,6 +40,7 @@ public class UserRootServiceImpl implements UserRootService {
     private DeviceBorrowRepository deviceBorrowRepository;
     @Autowired
     private DeviceStatusPublisher publisher;
+
     @Override
     public ReturnStatus login(String data) {
         try {
@@ -56,16 +57,16 @@ public class UserRootServiceImpl implements UserRootService {
             if (checkUser != null) {
                 ReturnStatus returnStatus = new ReturnStatus("yes", "登录成功!");
                 JSONObject returnJson = new JSONObject();
-                returnJson.set("userName",checkUser.getUserName());
-                returnJson.set("userAccount",checkUser.getUserAccount());
-                returnJson.set("rootType",checkUser.getRootType());
-                if (checkUser.getLoginTime() == null){
+                returnJson.set("userName", checkUser.getUserName());
+                returnJson.set("userAccount", checkUser.getUserAccount());
+                returnJson.set("rootType", checkUser.getRootType());
+                if (checkUser.getLoginTime() == null) {
                     String time = GetTime.GetSecondTime();
                     checkUser.setLoginTime(time);
                     userRootRepository.save(checkUser);
-                    returnJson.set("loginTime",time);
-                }else{
-                    returnJson.set("loginTime",checkUser.getLoginTime());
+                    returnJson.set("loginTime", time);
+                } else {
+                    returnJson.set("loginTime", checkUser.getLoginTime());
                 }
 
                 returnStatus.setReturnData(returnJson);
@@ -115,13 +116,13 @@ public class UserRootServiceImpl implements UserRootService {
 
             UserRoot userRoot = userRootRepository.findByUserAccount(checkRootAccount);
 
-            if (userRoot != null){
+            if (userRoot != null) {
                 JSONObject returnJson = new JSONObject();
                 PageRequest pageRequest = PageRequest.of(nowPage, needCount);
                 long totalPages;
                 long page;
                 List<User> userList;
-                if (userRoot.getRootType().equals(AllHref.super_steward_root_name)){
+                if (userRoot.getRootType().equals(AllHref.super_steward_root_name)) {
                     userList = userRepository.findAllByRootTypeNotInOrderByRootTypeDescUserAccountAsc(Arrays.asList(AllHref.super_steward_root_name), pageRequest);
                     totalPages = userRepository.countByRootTypeNotIn(Arrays.asList(AllHref.super_steward_root_name));
                     page = ShortIdGenerator.getPage(totalPages, pageRequest);
@@ -130,23 +131,23 @@ public class UserRootServiceImpl implements UserRootService {
                     returnJson.set("nowPage", nowPage + 1);
                     returnJson.set("tyData", "userPageData");
                     returnJson.set("userList", getModifyUserListSuperSteward(userList));
-                }else if(userRoot.getRootType().equals(AllHref.steward_root_name)){
-                    userList = userRepository.findAllByRootTypeNotInOrderByRootTypeDescUserAccountAsc(Arrays.asList(AllHref.super_steward_root_name,AllHref.steward_root_name), pageRequest);
-                    totalPages = userRepository.countByRootTypeNotIn(Arrays.asList(AllHref.super_steward_root_name,AllHref.steward_root_name));
+                } else if (userRoot.getRootType().equals(AllHref.steward_root_name)) {
+                    userList = userRepository.findAllByRootTypeNotInOrderByRootTypeDescUserAccountAsc(Arrays.asList(AllHref.super_steward_root_name, AllHref.steward_root_name), pageRequest);
+                    totalPages = userRepository.countByRootTypeNotIn(Arrays.asList(AllHref.super_steward_root_name, AllHref.steward_root_name));
                     page = ShortIdGenerator.getPage(totalPages, pageRequest);
                     returnJson.set("rootType", "no");
                     returnJson.set("allPage", page);
                     returnJson.set("nowPage", nowPage + 1);
                     returnJson.set("tyData", "userPageData");
                     returnJson.set("userList", getModifyUserListSteward(userList));
-                }else{
+                } else {
                     return new ReturnStatus("no", "获取用户数据失败!");
                 }
 
                 ReturnStatus returnStatus = new ReturnStatus("yes", "获取用户数据成功!");
                 returnStatus.setReturnData(returnJson);
                 return returnStatus;
-            }else{
+            } else {
                 return new ReturnStatus("kill", "当前没有管理员权限!");
             }
 
@@ -167,22 +168,22 @@ public class UserRootServiceImpl implements UserRootService {
             String setAdminAccount = getEquipJson.getStr("setAdminAccount");
 
             UserRoot userRoot = userRootRepository.findByUserAccount(userAccount);
-            if (userRoot.getRootType().equals(AllHref.super_steward_root_name)){
+            if (userRoot.getRootType().equals(AllHref.super_steward_root_name)) {
                 User user = userRepository.findByUserAccount(setAdminAccount);
                 user.setRootType(AllHref.user_root_name);
 
                 UserRoot needKillRootAccount = userRootRepository.findByUserAccount(setAdminAccount);
                 userRootRepository.delete(needKillRootAccount);
 
-                ReturnStatus returnStatus =  new ReturnStatus("yes", "取消管理员权限成功");
+                ReturnStatus returnStatus = new ReturnStatus("yes", "取消管理员权限成功");
                 JSONObject returnJson = new JSONObject();
-                returnJson.set("userAccount",setAdminAccount);
+                returnJson.set("userAccount", setAdminAccount);
                 returnStatus.setReturnData(returnJson);
 
                 publisher.publishStewardStatus(setAdminAccount);
 
                 return returnStatus;
-            }else {
+            } else {
                 return new ReturnStatus("no", "您大人有大量，别攻击我们的服务器了qaq");
             }
 
@@ -203,9 +204,9 @@ public class UserRootServiceImpl implements UserRootService {
             String setAdminAccount = getEquipJson.getStr("setAdminAccount");
 
             UserRoot userRoot = userRootRepository.findByUserAccount(userAccount);
-            if (userRoot.getRootType().equals(AllHref.super_steward_root_name)){
+            if (userRoot.getRootType().equals(AllHref.super_steward_root_name)) {
                 List<UserRoot> checkRootCount = userRootRepository.findAllByRootType(AllHref.steward_root_name);
-                if (checkRootCount.size() < AllHref.max_steward_count){
+                if (checkRootCount.size() < AllHref.max_steward_count) {
                     User user = userRepository.findByUserAccount(setAdminAccount);
                     user.setRootType(AllHref.steward_root_name);
 
@@ -219,16 +220,16 @@ public class UserRootServiceImpl implements UserRootService {
 
                     userRootRepository.save(needAddRootAccount);
 
-                    ReturnStatus returnStatus =  new ReturnStatus("yes", "设置管理员权限成功");
+                    ReturnStatus returnStatus = new ReturnStatus("yes", "设置管理员权限成功");
                     JSONObject returnJson = new JSONObject();
-                    returnJson.set("userAccount",setAdminAccount);
+                    returnJson.set("userAccount", setAdminAccount);
                     returnStatus.setReturnData(returnJson);
                     return returnStatus;
-                }else {
-                    return new ReturnStatus("bo", "最多设置"+AllHref.max_steward_count+"位管理员");
+                } else {
+                    return new ReturnStatus("bo", "最多设置" + AllHref.max_steward_count + "位管理员");
                 }
 
-            }else {
+            } else {
                 return new ReturnStatus("no", "您大人有大量，别攻击我们的服务器了qaq");
             }
 
@@ -249,15 +250,15 @@ public class UserRootServiceImpl implements UserRootService {
             String getPasswordAccount = getEquipJson.getStr("getPasswordAccount");
 
             UserRoot userRoot = userRootRepository.findByUserAccount(userAccount);
-            if (userRoot.getRootType().equals(AllHref.super_steward_root_name)){
+            if (userRoot.getRootType().equals(AllHref.super_steward_root_name)) {
                 User user = userRepository.findByUserAccount(getPasswordAccount);
 
-                ReturnStatus returnStatus =  new ReturnStatus("yes", "查询密码成功");
+                ReturnStatus returnStatus = new ReturnStatus("yes", "查询密码成功");
                 JSONObject returnJson = new JSONObject();
-                returnJson.set("password",user.getPassword());
+                returnJson.set("password", user.getPassword());
                 returnStatus.setReturnData(returnJson);
                 return returnStatus;
-            }else {
+            } else {
                 return new ReturnStatus("no", "您大人有大量，别攻击我们的服务器了qaq");
             }
 
@@ -283,8 +284,8 @@ public class UserRootServiceImpl implements UserRootService {
             String getPasswordAccount = getEquipJson.getStr("getPasswordAccount");
 
             long deviceBorrowListSize = deviceBorrowRepository.countAllByDeviceBorrowUserId(getPasswordAccount);
-            System.out.println("需要用户被删除时，当前账号: "+getPasswordAccount+",借出的设备数量为: "+deviceBorrowListSize);
-            if (deviceBorrowListSize == 0 ) {
+            System.out.println("需要用户被删除时，当前账号: " + getPasswordAccount + ",借出的设备数量为: " + deviceBorrowListSize);
+            if (deviceBorrowListSize == 0) {
                 UserRoot userRoot = userRootRepository.findByUserAccount(userAccount);
                 if (userRoot.getRootType().equals(AllHref.super_steward_root_name)) {
                     User user = userRepository.findByUserAccount(getPasswordAccount);
@@ -334,10 +335,10 @@ public class UserRootServiceImpl implements UserRootService {
                         publisher.publishUserStatus(getPasswordAccount);
                         return new ReturnStatus("yes", "删除账号成功");
                     }
-                }else {
+                } else {
                     return new ReturnStatus("no", "您大人有大量，别攻击我们的服务器了qaq");
                 }
-            }else{
+            } else {
                 return new ReturnStatus("no", "当前用户有未归还的设备，请等归还后再删除账号");
             }
 
@@ -366,84 +367,103 @@ public class UserRootServiceImpl implements UserRootService {
             List<User> userList;
             System.out.println(searchInput);
             System.out.println(selectedValue);
+            System.out.println("checkUserAccount: " + checkUserAccount);
             UserRoot userRoot = userRootRepository.findByUserAccount(checkUserAccount);
-            if(userRoot!=null && userRoot.getRootType().equals(AllHref.super_steward_root_name)){
+
+            JSONObject returnJson = new JSONObject();
+
+            if (userRoot != null) {
+                if (userRoot.getRootType().equals(AllHref.super_steward_root_name)) {
+                    returnJson.set("rootType", "yes");
+                } else {
+                    returnJson.set("rootType", "no");
+                }
+            }
+
+
+            if (userRoot != null && userRoot.getRootType().equals(AllHref.super_steward_root_name)) {
                 if (!searchInput.trim().isEmpty()) {
                     switch (selectedValue) {
                         case "userName":
                             userList = userRepository.findAllByUserNameLikeAndRootTypeNotInOrderByRootTypeDescUserAccountAsc("%" + searchInput + "%", Arrays.asList(AllHref.super_steward_root_name), pageRequest);
-                            totalPages = userRepository.countByUserNameLikeAndRootTypeNotIn("%" + searchInput + "%",Arrays.asList(AllHref.super_steward_root_name));
+                            totalPages = userRepository.countByUserNameLikeAndRootTypeNotIn("%" + searchInput + "%", Arrays.asList(AllHref.super_steward_root_name));
                             page = ShortIdGenerator.getPage(totalPages, pageRequest);
                             break;
                         case "userAccount":
-                            userList = userRepository.findAllByUserAccountLikeAndRootTypeNotInOrderByRootTypeDescUserAccountAsc("%" + searchInput + "%",Arrays.asList(AllHref.super_steward_root_name), pageRequest);
-                            totalPages = userRepository.countByUserAccountLikeAndRootTypeNotIn( "%" + searchInput + "%",Arrays.asList(AllHref.super_steward_root_name));
+                            userList = userRepository.findAllByUserAccountLikeAndRootTypeNotInOrderByRootTypeDescUserAccountAsc("%" + searchInput + "%", Arrays.asList(AllHref.super_steward_root_name), pageRequest);
+                            totalPages = userRepository.countByUserAccountLikeAndRootTypeNotIn("%" + searchInput + "%", Arrays.asList(AllHref.super_steward_root_name));
                             page = ShortIdGenerator.getPage(totalPages, pageRequest);
                             break;
                         default:
-                            userList = userRepository.findAllByRootTypeNotInOrderByRootTypeDescUserAccountAsc(Arrays.asList(AllHref.super_steward_root_name),pageRequest);
+                            userList = userRepository.findAllByRootTypeNotInOrderByRootTypeDescUserAccountAsc(Arrays.asList(AllHref.super_steward_root_name), pageRequest);
                             totalPages = userRepository.count();
                             page = ShortIdGenerator.getPage(totalPages, pageRequest);
                             break;
                     }
+                    returnJson.set("ifHaveSearch", "yes");
+                    returnJson.set("searchName", searchInput);
+                    returnJson.set("searchLabel", selectedValue);
                 } else {
-                    userList = userRepository.findAllByRootTypeNotInOrderByRootTypeDescUserAccountAsc(Arrays.asList(AllHref.super_steward_root_name),pageRequest);
+                    userList = userRepository.findAllByRootTypeNotInOrderByRootTypeDescUserAccountAsc(Arrays.asList(AllHref.super_steward_root_name), pageRequest);
                     totalPages = userRepository.count();
                     page = ShortIdGenerator.getPage(totalPages, pageRequest);
+
+                    returnJson.set("ifHaveSearch", "no");
+                    returnJson.set("tyData", "userPageData");
                 }
-                JSONObject returnJson = new JSONObject();
-                if (userRoot.getRootType().equals(AllHref.super_steward_root_name)){
-                    returnJson.set("rootType", "yes");
-                }else {
-                    returnJson.set("rootType", "no");
-                }
+
 
                 returnJson.set("allPage", page);
                 returnJson.set("nowPage", nowPage + 1);
                 List<User> returnList = getModifyUserListSuperSteward(userList);
                 returnJson.set("userList", new JSONArray(returnList));
-                returnJson.set("searchName", searchInput);
-                returnJson.set("searchLabel", selectedValue);
+
                 ReturnStatus returnStatus = new ReturnStatus("yes", "获取成功");
                 returnStatus.setReturnData(returnJson);
                 return returnStatus;
-            }else if (userRoot!=null && userRoot.getRootType().equals(AllHref.steward_root_name)){
+            } else if (userRoot != null && userRoot.getRootType().equals(AllHref.steward_root_name)) {
                 if (!searchInput.trim().isEmpty()) {
                     switch (selectedValue) {
                         case "userName":
                             userList = userRepository.findAllByUserNameLikeAndRootTypeNotInOrderByRootTypeDescUserAccountAsc("%" + searchInput + "%", Arrays.asList(AllHref.steward_root_name, AllHref.super_steward_root_name), pageRequest);
-                            totalPages = userRepository.countByUserNameLikeAndRootTypeNotIn("%" + searchInput + "%",Arrays.asList(AllHref.steward_root_name, AllHref.super_steward_root_name));
+                            totalPages = userRepository.countByUserNameLikeAndRootTypeNotIn("%" + searchInput + "%", Arrays.asList(AllHref.steward_root_name, AllHref.super_steward_root_name));
                             page = ShortIdGenerator.getPage(totalPages, pageRequest);
                             break;
                         case "userAccount":
                             userList = userRepository.findAllByUserAccountLikeAndRootTypeNotInOrderByRootTypeDescUserAccountAsc("%" + searchInput + "%", Arrays.asList(AllHref.steward_root_name, AllHref.super_steward_root_name), pageRequest);
-                            totalPages = userRepository.countByUserAccountLikeAndRootTypeNotIn("%" + searchInput + "%",Arrays.asList(AllHref.steward_root_name, AllHref.super_steward_root_name));
+                            totalPages = userRepository.countByUserAccountLikeAndRootTypeNotIn("%" + searchInput + "%", Arrays.asList(AllHref.steward_root_name, AllHref.super_steward_root_name));
                             page = ShortIdGenerator.getPage(totalPages, pageRequest);
                             break;
                         default:
-                            userList = userRepository.findAllByRootTypeNotInOrderByRootTypeDescUserAccountAsc(Arrays.asList(AllHref.super_steward_root_name,AllHref.steward_root_name),pageRequest);
+                            userList = userRepository.findAllByRootTypeNotInOrderByRootTypeDescUserAccountAsc(Arrays.asList(AllHref.super_steward_root_name, AllHref.steward_root_name), pageRequest);
                             totalPages = userRepository.count();
                             page = ShortIdGenerator.getPage(totalPages, pageRequest);
                             break;
 
                     }
+
+                    returnJson.set("ifHaveSearch", "yes");
+                    returnJson.set("searchName", searchInput);
+                    returnJson.set("searchLabel", selectedValue);
                 } else {
-                    userList = userRepository.findAllByRootTypeNotInOrderByRootTypeDescUserAccountAsc(Arrays.asList(AllHref.super_steward_root_name,AllHref.steward_root_name),pageRequest);
+                    userList = userRepository.findAllByRootTypeNotInOrderByRootTypeDescUserAccountAsc(Arrays.asList(AllHref.super_steward_root_name, AllHref.steward_root_name), pageRequest);
                     totalPages = userRepository.count();
                     page = ShortIdGenerator.getPage(totalPages, pageRequest);
+
+                    returnJson.set("ifHaveSearch", "no");
+                    returnJson.set("tyData", "userPageData");
                 }
 
-                JSONObject returnJson = new JSONObject();
+
                 returnJson.set("allPage", page);
                 returnJson.set("nowPage", nowPage + 1);
-                List<User> returnList = getModifyUserListSteward(userList);
+                List<User> returnList = getModifyUserListSuperSteward(userList);
                 returnJson.set("userList", new JSONArray(returnList));
-                returnJson.set("searchName", searchInput);
-                returnJson.set("searchLabel", selectedValue);
+
                 ReturnStatus returnStatus = new ReturnStatus("yes", "获取成功");
                 returnStatus.setReturnData(returnJson);
                 return returnStatus;
-            }else{
+            } else {
                 return new ReturnStatus("no", "获取权限异常，您当前无权限");
             }
 
@@ -464,7 +484,7 @@ public class UserRootServiceImpl implements UserRootService {
 
             String userName = getEquipJson.getStr("userName");
             if (userName == null || userName.trim().isEmpty()) {
-                return new ReturnStatus("no","用户名不能为空");
+                return new ReturnStatus("no", "用户名不能为空");
             }
 
             StringBuilder sb = new StringBuilder();
@@ -483,12 +503,12 @@ public class UserRootServiceImpl implements UserRootService {
                     sb.append(c); // 非汉字保留
                 }
             }
-            System.out.println("新建用户的名称拼音为: "+sb);
+            System.out.println("新建用户的名称拼音为: " + sb);
             JSONObject returnJson = new JSONObject();
-            returnJson.set("userAccount",sb);
-            returnJson.set("userPassword",sb.toString()+123);
+            returnJson.set("userAccount", sb);
+            returnJson.set("userPassword", sb.toString() + 123);
             System.out.println(returnJson);
-            ReturnStatus returnStatus = new ReturnStatus("yes","拼音获取成功!");
+            ReturnStatus returnStatus = new ReturnStatus("yes", "拼音获取成功!");
             returnStatus.setReturnData(returnJson);
             return returnStatus;
         } catch (Exception e) {
@@ -516,7 +536,7 @@ public class UserRootServiceImpl implements UserRootService {
             PageRequest pageRequest = PageRequest.of(nowPage, needCount);
 
             User user = userRepository.findByUserAccount(userAccount);
-            if (user == null && userRoot!= null){
+            if (user == null && userRoot != null) {
                 User addUser = new User();
                 addUser.setUserName(userName);
                 addUser.setUserAccount(userAccount);
@@ -531,8 +551,8 @@ public class UserRootServiceImpl implements UserRootService {
                 long totalPages;
                 long page;
                 List<User> userList;
-                if (userRoot.getRootType().equals(AllHref.super_steward_root_name)){
-                    userList = userRepository.findAllByRootTypeNotInOrderByRootTypeDescUserAccountAsc(Arrays.asList(AllHref.super_steward_root_name),pageRequest);
+                if (userRoot.getRootType().equals(AllHref.super_steward_root_name)) {
+                    userList = userRepository.findAllByRootTypeNotInOrderByRootTypeDescUserAccountAsc(Arrays.asList(AllHref.super_steward_root_name), pageRequest);
                     totalPages = userRepository.countByRootTypeNotIn(Arrays.asList(AllHref.super_steward_root_name));
                     page = ShortIdGenerator.getPage(totalPages, pageRequest);
 
@@ -540,7 +560,7 @@ public class UserRootServiceImpl implements UserRootService {
                     returnJson.set("allPage", page);
                     returnJson.set("nowPage", nowPage + 1);
                     returnJson.set("userList", getModifyUserListSuperSteward(userList));
-                }else if (userRoot.getRootType().equals(AllHref.steward_root_name)){
+                } else if (userRoot.getRootType().equals(AllHref.steward_root_name)) {
                     userList = userRepository.findAllByRootTypeNotInOrderByRootTypeDescUserAccountAsc(Arrays.asList(AllHref.steward_root_name, AllHref.super_steward_root_name), pageRequest);
                     totalPages = userRepository.countByRootTypeNotIn(Arrays.asList(AllHref.steward_root_name, AllHref.super_steward_root_name));
                     page = ShortIdGenerator.getPage(totalPages, pageRequest);
@@ -549,7 +569,7 @@ public class UserRootServiceImpl implements UserRootService {
                     returnJson.set("allPage", page);
                     returnJson.set("nowPage", nowPage + 1);
                     returnJson.set("userList", getModifyUserListSteward(userList));
-                }else{
+                } else {
                     return new ReturnStatus("no", "添加新用户失败!");
                 }
 
@@ -557,10 +577,10 @@ public class UserRootServiceImpl implements UserRootService {
                 returnStatus.setReturnData(returnJson);
                 return returnStatus;
 
-            }else if (user != null){
-                return new ReturnStatus("no","该用户已经存在了!");
-            }else{
-                return new ReturnStatus("no","当前账号没有权限!");
+            } else if (user != null) {
+                return new ReturnStatus("no", "该用户已经存在了!");
+            } else {
+                return new ReturnStatus("no", "当前账号没有权限!");
             }
 
         } catch (Exception e) {
@@ -571,7 +591,7 @@ public class UserRootServiceImpl implements UserRootService {
         }
     }
 
-    private List<User> getModifyUserListSuperSteward(List<User> list){
+    private List<User> getModifyUserListSuperSteward(List<User> list) {
         List<User> returnList = new ArrayList<>();
 
         if (list.size() > 0) {
@@ -582,12 +602,12 @@ public class UserRootServiceImpl implements UserRootService {
                 needUser.setUserName(user.getUserName());
                 needUser.setLoginTime(user.getLoginTime());
                 UserRoot userRoot = userRootRepository.findByUserAccount(user.getUserAccount());
-                if (userRoot != null && userRoot.getRootType().equals(AllHref.steward_root_name)){
+                if (userRoot != null && userRoot.getRootType().equals(AllHref.steward_root_name)) {
                     needUser.setRootType("yes");
                     returnList.add(needUser);
-                }else if (userRoot != null && userRoot.getRootType().equals(AllHref.super_steward_root_name)){
+                } else if (userRoot != null && userRoot.getRootType().equals(AllHref.super_steward_root_name)) {
                     System.out.println("超管被放到数据里了");
-                }else{
+                } else {
                     needUser.setRootType("no_root");
                     returnList.add(needUser);
                 }
@@ -596,7 +616,8 @@ public class UserRootServiceImpl implements UserRootService {
         }
         return returnList;
     }
-    private List<User> getModifyUserListSteward(List<User> list){
+
+    private List<User> getModifyUserListSteward(List<User> list) {
         List<User> returnList = new ArrayList<>();
 
         if (!list.isEmpty()) {

@@ -2,6 +2,8 @@ package com.example.springboot_ch_1.util;
 
 import org.springframework.data.domain.PageRequest;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -48,5 +50,24 @@ public class ShortIdGenerator {
             totalPages = (int) Math.floor((double) totalPages / pageSize);
         }
         return totalPages;
+    }
+
+    public static <T> List<T> getPaginatedList(List<T> list, PageRequest pageRequest) {
+        int currentPage = pageRequest.getPageNumber();
+        int pageSize = pageRequest.getPageSize();
+
+        // 计算起始索引
+        int start = currentPage * pageSize; // 因为 nowPage 从 0 开始，所以直接乘以 pageSize
+
+        // 如果 start 超出了列表的范围，返回空列表
+        if (start >= list.size()) {
+            return new ArrayList<>();
+        }
+
+        // 计算结束索引
+        int end = Math.min(start + pageSize, list.size());
+
+        // 返回分页后的子列表
+        return list.subList(start, end);
     }
 }

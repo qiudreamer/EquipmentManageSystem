@@ -9,9 +9,10 @@ const checkOverlay = document.getElementById("check-overlay")
 function searchCheck(){
     let selectedValue = document.getElementById("searchType");
     let searchInput = document.getElementById("searchInput");
+    searchInput.value = searchInput.value.replace(/\s+/g, "")
     let data = {
         "nowPage": 0,
-        "needCount": articlePageSize,
+        "needCount": checkEquipmentPageSize,
         "searchInput":searchInput.value,
         "selectedValue":selectedValue.value
     }

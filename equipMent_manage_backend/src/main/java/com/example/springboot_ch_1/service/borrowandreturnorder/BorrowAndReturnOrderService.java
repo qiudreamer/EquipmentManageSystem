@@ -19,4 +19,6 @@ public interface BorrowAndReturnOrderService {
     ReturnStatus doMineOrderTypeAboutEquipment(String data);
 
     ReturnStatus showOrderData(String data);
+
+    ReturnStatus searchOrder(String data);
 }

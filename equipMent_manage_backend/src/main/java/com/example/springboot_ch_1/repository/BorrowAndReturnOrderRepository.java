@@ -29,5 +29,26 @@ public interface BorrowAndReturnOrderRepository extends JpaRepository<BorrowAndR
 
     List<BorrowAndReturnOrder> findAllByOrderByOrderTypeAscOpTypeDescBorrowTimeDesc(PageRequest pageRequest);
 
-//    void deleteBorrowAndReturnOrderByOrderId(String orderId);
+    List<BorrowAndReturnOrder> findAllByDeviceId(String equipmentId);
+
+
+//    登神长阶
+    List<BorrowAndReturnOrder> findAllByOpTypeOrderByOrderTypeAscOpTypeDescBorrowTimeDesc(String opType, PageRequest pageRequest);
+    long countByOpType(String opType);
+
+
+    List<BorrowAndReturnOrder> findAllByUserNameLikeOrderByOrderTypeAscOpTypeDescBorrowTimeDesc(String userName, PageRequest pageRequest);
+    long countByUserNameLike(String userName);
+
+
+    List<BorrowAndReturnOrder> findAllByOpTypeAndUserNameLikeOrderByOrderTypeAscOpTypeDescBorrowTimeDesc(String opType, String userName, PageRequest pageRequest);
+    long countByOpTypeAndUserNameLike(String opType,String userName);
+
+
+    List<BorrowAndReturnOrder> findAllByDeviceNameLikeOrderByOrderTypeAscOpTypeDescBorrowTimeDesc(String equipmentName, PageRequest pageRequest);
+    long countByDeviceNameLike(String userName);
+
+
+    List<BorrowAndReturnOrder> findAllByOpTypeAndDeviceNameLikeOrderByOrderTypeAscOpTypeDescBorrowTimeDesc(String opType, String deviceName, PageRequest pageRequest);
+    long countByOpTypeAndDeviceNameLike(String opType,String deviceName);
 }

@@ -257,7 +257,7 @@
         display: none;
     }
     .user-row{
-        grid-template-columns: 1.5fr 1.5fr 6fr
+        grid-template-columns: 2.5fr 2.5fr 6fr;
     }
     .col{
         font-size: 1.7vh;

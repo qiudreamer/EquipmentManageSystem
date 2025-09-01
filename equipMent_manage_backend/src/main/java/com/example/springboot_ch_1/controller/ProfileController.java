@@ -39,4 +39,9 @@ public class ProfileController {
     private ReturnStatus showOrderData(@RequestBody String data){
         return borrowAndReturnOrderService.showOrderData(data);
     }
+
+    @PostMapping("/searchOrder")
+    private ReturnStatus searchOrder(@RequestBody String data){
+        return borrowAndReturnOrderService.searchOrder(data);
+    }
 }

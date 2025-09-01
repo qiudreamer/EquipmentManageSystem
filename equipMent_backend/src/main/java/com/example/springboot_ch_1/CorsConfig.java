@@ -13,9 +13,10 @@ public class CorsConfig {
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
 
-        // 允许来自 http://localhost:7778和socket的请求
+        // 允许来自 系统前端,自身,后台管理系统的前端的请求
         config.addAllowedOrigin(AllHref.front_url1);
         config.addAllowedOrigin(AllHref.front_url2);
+        config.addAllowedOrigin(AllHref.front_url3);
 
         config.setAllowCredentials(true); // 允许携带凭据（Cookie）
         config.addAllowedMethod("*"); // 允许所有HTTP方法

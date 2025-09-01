@@ -62,9 +62,9 @@ function getPageData(nowPage, type) {
             });
     }else if (type === "borrowCheckPageData"){
         let data = {
-            "nowPage": 0,
-            "needCount": checkEquipmentPageSize,
-            "checkRootAccount": localStorageUserData['userAccount']
+            "checkRootAccount": localStorageUserData['userAccount'],
+            "nowPage": nowPage,
+            "needCount": checkEquipmentPageSize
         }
         postData(local_href + local_equipment_tag + "/getAllCheckEquipment", JSON.stringify(data))
             .then((responseText) => {
@@ -203,7 +203,8 @@ function getAllLabelPageData(nowPage, searchName, searchLabel, searchType) {
                 console.log(error)
                 showCustomMessage("数据请求失败");
             });
-    }else if (searchType === "check"){
+    }
+    else if (searchType === "check"){
         let data= {
             "checkRootAccount": localStorageUserData['userAccount'],
             "nowPage": nowPage,
@@ -233,9 +234,75 @@ function getAllLabelPageData(nowPage, searchName, searchLabel, searchType) {
                 console.log(error)
                 showCustomMessage("数据请求失败");
             });
-    }else if (searchType === "user"){
+    }
+    else if (searchType === "user"){
+        let data= {
+            "nowPage": nowPage,
+            "needCount": userPageSize,
+            "searchInput":searchName,
+            "selectedValue":searchLabel,
+            "checkUserAccount": localStorageUserData['userAccount']
+        }
+        console.log(data)
+        postData(local_href + local_steward_tag + "/searchUser", JSON.stringify(data))
+            .then((responseText) => {
+                console.log(responseText)
+                if (responseText['code'] === "yes") {
+                    grid.innerHTML = "";
+                    console.log(responseText)
+                    addUserPageData(responseText)
+                    if (responseText['returnData']['ifHaveSearch'] === "yes"){
+                        console.log("equipment_have_search_yes")
+                        addLabelSearchBottom(responseText['returnData']['nowPage'],responseText['returnData']['allPage'],"pager-home", responseText['returnData']['searchName'],responseText['returnData']['searchLabel'], "user")
+                    }else{
+                        console.log("equipment_have_search_no")
+                        addBottom(responseText['returnData']['nowPage'],responseText['returnData']['allPage'],responseText['returnData']['tyData'],"pager-home")
+                    }
+                } else {
+                    showCustomMessage(responseText['reason'])
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+                showCustomMessage("数据请求失败");
+            });
+    }
+    else if (searchType === "order"){
 
-    }else if (searchType === "order"){
+        console.log(searchLabel)
+        let labelJson = JSON.parse(searchLabel);
+
+        let data= {
+            "nowPage": nowPage,
+            "needCount": workOrderPageSize,
+            "searchInput":searchName,
+            "searchType":labelJson['searchType'],
+            "searchOrderType": labelJson['searchOrderType']
+        }
+
+        console.log(data)
+
+        postData(local_href + local_order_tag + "/searchOrder", JSON.stringify(data))
+            .then((responseText) => {
+                console.log(responseText)
+                if (responseText['code'] === "yes") {
+                    grid.innerHTML = "";
+                    addBorrowAndOrderPageDataProfile(responseText)
+                    if (responseText['returnData']['ifHaveSearch'] === "yes"){
+                        console.log("equipment_have_search_yes")
+                        addLabelSearchBottom(responseText['returnData']['nowPage'],responseText['returnData']['allPage'],"pager-home", responseText['returnData']['searchName'],responseText['returnData']['searchLabel'], "order")
+                    }else{
+                        console.log("equipment_have_search_no")
+                        addBottom(responseText['returnData']['nowPage'],responseText['returnData']['allPage'],responseText['returnData']['tyData'],"pager-home")
+                    }
+                } else {
+                    showCustomMessage(responseText['reason'])
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+                showCustomMessage("数据请求失败");
+            });
 
     }
 

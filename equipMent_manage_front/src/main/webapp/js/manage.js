@@ -20,7 +20,7 @@ const gird = document.getElementById("grid");
 function searchEquipment(){
     let selectedValue = document.getElementById("searchType");
     let searchInput = document.getElementById("searchInput");
-    searchInput.value = searchInput.value.trim()
+    searchInput.value = searchInput.value.replace(/\s+/g, "")
     let data = {
         "nowPage": 0,
         "needCount": articlePageSize,

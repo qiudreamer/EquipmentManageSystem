@@ -29,5 +29,6 @@ public interface UserRepository extends JpaRepository<User, String>, JpaSpecific
     long countByUserAccountLikeAndRootTypeNotIn(String userName, List<String> excludedRootTypes);
 
 
-
+    List<User> findAllByUserNameLikeOrderByUserAccountAsc(String userName, PageRequest pageRequest);
+    List<User> findAllByUserNameLikeOrderByUserAccountAsc(String userName);
 }

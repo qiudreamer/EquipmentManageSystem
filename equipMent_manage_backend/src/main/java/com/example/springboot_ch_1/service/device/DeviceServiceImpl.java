@@ -191,7 +191,6 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public ReturnStatus submitNewEquipmentData(String data) {
         try {
-            System.out.println(data);
             JSONObject getEquipJson = new JSONObject(data);
 
             String equipmentName = getEquipJson.getStr("equipmentName");
@@ -487,6 +486,24 @@ public class DeviceServiceImpl implements DeviceService {
             Device changeEquipment = deviceRepository.findByEquipmentId(equipmentId);
 
             if (changeEquipment != null) {
+                if (!changeEquipment.getEquipmentName().equals(equipmentName)){
+                    List<BorrowAndReturnOrder> borrowAndReturnOrderList = borrowAndReturnOrderRepository.findAllByDeviceId(equipmentId);
+                    if (!borrowAndReturnOrderList.isEmpty()){
+                        for (BorrowAndReturnOrder borrowAndReturnOrder : borrowAndReturnOrderList){
+                            borrowAndReturnOrder.setDeviceName(equipmentName);
+                        }
+                    }
+                }
+
+                if (!changeEquipment.getEquipmentCode().equals(equipmentCode)){
+                    List<BorrowAndReturnOrder> borrowAndReturnOrderList = borrowAndReturnOrderRepository.findAllByDeviceId(equipmentId);
+                    if (!borrowAndReturnOrderList.isEmpty()){
+                        for (BorrowAndReturnOrder borrowAndReturnOrder : borrowAndReturnOrderList){
+                            borrowAndReturnOrder.setDeviceCode(equipmentCode);
+                        }
+                    }
+                }
+
                 changeEquipment.setEquipmentName(equipmentName);
                 changeEquipment.setEquipmentCode(equipmentCode);
                 changeEquipment.setEquipmentDesc(equipmentDesc);
@@ -506,6 +523,7 @@ public class DeviceServiceImpl implements DeviceService {
                     newEquipmentImgHrefUrl = changeEquipment.getEquipmentImg();
                 }
                 deviceRepository.save(changeEquipment);
+
 
                 publisher.publishChangeEquipment(equipmentId, equipmentName, equipmentCode, equipmentTag, newEquipmentImgHrefUrl);
 
@@ -576,13 +594,13 @@ public class DeviceServiceImpl implements DeviceService {
             if (borrowEquipmentCheck != null) {
                 Device checkDevice = deviceRepository.findByEquipmentId(borrowEquipmentCheck.getEquipmentId());
                 if (checkDevice.getEquipmentStatus().equals(Device.Status.available)) {
-                    //                  调用方法同意工单
+                    //                  调用方法同意工单DeviceProblemType
                     borrowEquipment(borrowEquipmentCheck.getEquipmentId(), borrowEquipmentCheck.getUserId());
                 } else {
                     System.out.println("出现了异常数据,这条数据是因为借出后，尚未删除掉审核工单造成的");
                 }
-                //                  删除掉审核工单
-                borrowEquipmentCheckRepository.delete(borrowEquipmentCheck);
+                //                  删掉所有借用该Equipment的工单(对于同意借走设备的用户，本来就应该删掉他的借出工单，对于其他所有未能借到设备的用户，该工单相当于被驳回)
+                borrowEquipmentCheckRepository.deleteAllByEquipmentId(borrowEquipmentCheck.getEquipmentId());
 
 
                 PageRequest pageRequest = PageRequest.of(nowPage, needCount);
@@ -654,28 +672,48 @@ public class DeviceServiceImpl implements DeviceService {
 
             int needCount = getEquipJson.getInt("needCount");
             int nowPage = getEquipJson.getInt("nowPage");
+            System.out.println("needCount: "+needCount);
+            System.out.println("nowPage: "+nowPage);
             String searchInput = getEquipJson.getStr("searchInput");
             String selectedValue = getEquipJson.getStr("selectedValue");
 
             PageRequest pageRequest = PageRequest.of(nowPage, needCount);
             long totalPages;
             long page;
-            List<BorrowEquipmentCheck> deviceList;
+            List<BorrowEquipmentCheck> deviceList = new ArrayList<>();
             System.out.println(searchInput);
             System.out.println(selectedValue);
 
             JSONObject returnJson = new JSONObject();
-
+            List<BorrowEquipmentCheck> allBorrowEquipmentCheckList = new ArrayList<>();
             if (searchInput!=null && !searchInput.trim().isEmpty()) {
                 switch (selectedValue) {
-                    case "userAccount":
-                        deviceList = borrowEquipmentCheckRepository.findAllByUserIdLikeOrderByCheckTimeDesc("%" + searchInput + "%", pageRequest);
-                        totalPages = borrowEquipmentCheckRepository.countByUserIdLike("%" + searchInput + "%");
+                    case "userName":
+                        List<User> userListAllForUserName = userRepository.findAllByUserNameLikeOrderByUserAccountAsc("%" + searchInput + "%");
+                        for (User user: userListAllForUserName){
+                            List<BorrowEquipmentCheck> addCheckList = borrowEquipmentCheckRepository.findAllByUserIdOrderByCheckTimeDesc(user.getUserAccount());
+                            allBorrowEquipmentCheckList.addAll(addCheckList);
+                        }
+                        totalPages = allBorrowEquipmentCheckList.size();
+                        System.out.println("All.totalPages.count: "+totalPages);
+                        // 提取当前页的数据
+                        deviceList= ShortIdGenerator.getPaginatedList(allBorrowEquipmentCheckList, pageRequest);
+                        System.out.println("Paginated Devices: " + deviceList);
+
                         page = ShortIdGenerator.getPage(totalPages, pageRequest);
                         break;
-                    case "equipmentId":
-                        deviceList = borrowEquipmentCheckRepository.findAllByEquipmentIdLikeOrderByCheckTimeDesc("%" + searchInput + "%", pageRequest);
-                        totalPages = borrowEquipmentCheckRepository.countByEquipmentIdLike("%" + searchInput + "%");
+                    case "equipmentName":
+                        List<Device> devicesListAllForEquipmentName = deviceRepository.findAllByEquipmentNameLikeOrderByEquipmentCreateTimeDesc("%" + searchInput + "%");
+                        for (Device device : devicesListAllForEquipmentName){
+                            List<BorrowEquipmentCheck> addCheckList = borrowEquipmentCheckRepository.findAllByEquipmentIdOrderByCheckTimeDesc(device.getEquipmentId());
+                            allBorrowEquipmentCheckList.addAll(addCheckList);
+                        }
+                        totalPages = allBorrowEquipmentCheckList.size();
+                        System.out.println("All.totalPages.count: "+totalPages);
+                        // 提取当前页的数据
+                        deviceList= ShortIdGenerator.getPaginatedList(allBorrowEquipmentCheckList, pageRequest);
+                        System.out.println("Paginated Devices: " + deviceList);
+
                         page = ShortIdGenerator.getPage(totalPages, pageRequest);
                         break;
                     default:

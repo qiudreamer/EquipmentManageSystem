@@ -291,7 +291,7 @@ dialog::backdrop {
     padding: 1.25rem 2.5rem;
   }
   .item img {
-    height: 8.75rem;
+    height: 14.75rem;
   }
 }
 
@@ -498,6 +498,14 @@ body {
   border: 1px solid #ccc;
   border-radius: 4px;
   resize: vertical; /* 允许用户调整高度 */
+}
+
+.dialog-reason-box{
+  display: flex;
+  flex-direction: column;
+  padding: 1vh 0;
+  gap: 0.5vh;
+  font-weight: 700;
 }
 
 .dialog-buttons {

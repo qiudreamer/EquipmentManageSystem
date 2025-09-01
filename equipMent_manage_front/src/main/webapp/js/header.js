@@ -1,5 +1,8 @@
 
+
 function addHeader(needActivity){
+    let user = localStorage.getItem("user");
+    let userName = user ? JSON.parse(user)['userAccount'] : '未知用户';
     mainMenuHeaderBox.innerHTML = `<div class="nav-toggle" id="nav-toggle-id" onclick="openMenu()">
     <span></span>
     <span></span>
@@ -11,7 +14,7 @@ function addHeader(needActivity){
     <li class="menu_li menu_need_link menu_li_open ${needActivity === 'check' ? 'active' : ''}"><a href="/check" class="menu_a">审核管理</a></li>
     <li class="menu_li menu_need_link menu_li_open ${needActivity === 'user' ? 'active' : ''}"><a href="/user" class="menu_a">用户管理</a></li>
     <li class="menu_li menu_need_link menu_li_open ${needActivity === 'order' ? 'active' : ''}"><a href="/order" class="menu_a">工单管理</a></li>
-    <div class="welcome menu_li_open">欢迎：用户名</div>
+    <div class="welcome menu_li_open" id="welcome-user-div-content">欢迎:${userName}</div>
     <li class="menu_li menu_li_open"><div class="menu_a" onclick="logOutUser()">登出</div></li>
 </ul>`
 }

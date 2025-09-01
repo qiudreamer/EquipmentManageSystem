@@ -40,6 +40,8 @@ const nervousId = document.getElementById('nervous-id')
 const nervousTime = document.getElementById('nervous-time')
 
 
+
+
 // 2. 显示浮窗
 const modal = document.getElementById('nervousModal');
 // 3. 点击“确定”关闭
@@ -238,7 +240,12 @@ function showSubmitEquipmentRequestBox(requestEquipmentDeviceName,requestEquipme
 
     })
 }
-
+function limitReason(el) {
+    const max = 100;
+    let dialogReasonCount = document.getElementById("dialog-reason-count");
+    if (el.value.length > max) el.value = el.value.slice(0, max);
+    dialogReasonCount.textContent = el.value.length + '/' + max;
+}
 function limitDesc(el) {
     const max = 100;
     if (el.value.length > max) el.value = el.value.slice(0, max);
@@ -319,6 +326,9 @@ function clearFormInputs() {
 
 //   恢复确定按钮的状态:
     document.getElementById('confirmButton').disabled = true
+
+    let dialogReasonCount = document.getElementById("dialog-reason-count");
+    dialogReasonCount.textContent = "0/100"
 }
 function confirmButtonToDialog(){
     let confirmDialog = document.getElementById('confirmDialog');
@@ -498,8 +508,12 @@ function addDetailEquipmentBox(responseText, needAppendDiv) {
                         <p class="dialog-tip">可以在个人中心->我的工单中撤销哦</p>
                                     <!-- 添加文本框 -->
                             <div class="dialog-reason-input">
-                                <p>详细描述问题（可选）：</p>
-                                <textarea id="home-dialog-reason-input" placeholder="请输入问题的详细描述..."></textarea>
+                                <div class="dialog-reason-box">
+                                      <p>详细描述问题（可选）：</p>
+                                      <p id="dialog-reason-count">0/100</p>
+                                </div>
+
+                                <textarea id="home-dialog-reason-input" placeholder="请输入问题的详细描述..." maxlength="100" oninput="limitReason(this)"></textarea>
                             </div>
                         <div class="dialog-buttons">
                           <button id="confirmButton" class="dialog-confirm-button" onclick="confirmButtonToDialog()" disabled>确定</button>

@@ -18,6 +18,10 @@ const deviceCode = document.getElementById("device-code-value")
 const deviceDesc = document.getElementById("device-desc-value")
 const deviceTags = document.getElementById("device-tags-value")
 
+const orderDeviceProblemInfo =  document.getElementById("order-device-problem-info");
+const deviceProblemTypeValue = document.getElementById("device-problem-type-value");
+const deviceProblemReasonValue = document.getElementById("device-problem-reason-value");
+
 
 
 
@@ -62,8 +66,45 @@ function translateType(s) {
     return map[s] || s;
 }
 
-function searchEquipment(){
+function searchOrder(){
 
+    let searchInput = document.getElementById("searchInput");
+    let searchType = document.getElementById("searchType");
+    let searchOrderType = document.getElementById("searchOrderType");
+
+    searchInput.value = searchInput.value.replace(/\s+/g, "")
+
+    let data = {
+        "nowPage": 0,
+        "needCount": workOrderPageSize,
+        "searchInput":searchInput.value,
+        "searchType":searchType.value,
+        "searchOrderType":searchOrderType.value
+    }
+
+    console.log(data)
+
+    postData(local_href + local_order_tag + "/searchOrder", JSON.stringify(data))
+        .then((responseText) => {
+            console.log(responseText)
+            if (responseText['code'] === "yes") {
+                grid.innerHTML = "";
+                addBorrowAndOrderPageDataProfile(responseText)
+                if (responseText['returnData']['ifHaveSearch'] === "yes"){
+                    console.log("equipment_have_search_yes")
+                    addLabelSearchBottom(responseText['returnData']['nowPage'],responseText['returnData']['allPage'],"pager-home", responseText['returnData']['searchName'],responseText['returnData']['searchLabel'], "order")
+                }else{
+                    console.log("equipment_have_search_no")
+                    addBottom(responseText['returnData']['nowPage'],responseText['returnData']['allPage'],responseText['returnData']['tyData'],"pager-home")
+                }
+            } else {
+                showCustomMessage(responseText['reason'])
+            }
+        })
+        .catch((error) => {
+            console.log(error)
+            showCustomMessage("数据请求失败");
+        });
 }
 function cancelShow(){
     orderOverlay.style.display = "none";
@@ -82,6 +123,10 @@ function cancelShow(){
 
     deviceImg.src ="";
     deviceImg.alt ="";
+
+    orderDeviceProblemInfo.classList.remove("show");
+    deviceProblemTypeValue.textContent = ""
+    deviceProblemReasonValue.textContent = ""
 }
 // 获取到详细的order数据
 function showOrderData(orderId) {
@@ -120,7 +165,11 @@ function showOrderData(orderId) {
                     deviceImg.alt = responseText['returnData']['deviceData']['equipmentName'];
                 }
 
-
+                if (responseText['returnData']['ifDeviceProblemType'] === "yes"){
+                    orderDeviceProblemInfo.classList.add("show")
+                    deviceProblemTypeValue.textContent = responseText['returnData']['deviceProblemData']['reasons'];
+                    deviceProblemReasonValue.textContent = responseText['returnData']['deviceProblemData']['detailedReason'];
+                }
                 // 显示覆盖层
                 orderOverlay.style.display = "flex";
 
