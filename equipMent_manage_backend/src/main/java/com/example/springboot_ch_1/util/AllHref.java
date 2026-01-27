@@ -22,22 +22,14 @@ public class AllHref {
     public static int max_steward_count = 3;
 
 
-//    public static String front_url1 = "http://localhost:9998";
-//    public static String front_url2 = "http://localhost:9999";
-//    public static String front_url3 = "http://localhost:7778";
-//
-//    //本地用的
-//    public static String equipment_img_href = "C:/Users/12431/Desktop/equipmentljhmanageImg/";
-//    public static String equipment_img_href_url = "http://localhost:9996/";
+   public static String front_url1 = "http://localhost:9998";
+   public static String front_url2 = "http://localhost:9999";
+   public static String front_url3 = "http://localhost:7778";
 
+   //本地用的
+   public static String equipment_img_href = "C:/Users/12431/Desktop/equipmentljhmanageImg/";
+   public static String equipment_img_href_url = "http://localhost:9996/";
 
-    public static String front_url1 = "http://10.0.0.143:9998";
-    public static String front_url2 = "http://10.0.0.143:9999";
-    public static String front_url3 = "http://10.0.0.143:7778";
-
-    //部署用的
-    public static String equipment_img_href = "/z_ljh_equipment_manage_system/equipmentljhmanageImg/";
-    public static String equipment_img_href_url = "http://10.0.0.143:9996/";
 
 
     public static String user_root_name = "none_user";
