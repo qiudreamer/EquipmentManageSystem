@@ -2,10 +2,6 @@
 // const local_manage_backend_href = "http://localhost:9999";
 // const local_manage_front_href = "http://localhost:9998";
 // const local_backend_href = "http://localhost:7777";
-// 服务器部署
-const local_manage_backend_href = "http://10.0.0.143:9999";
-const local_manage_front_href = "http://10.0.0.143:9998";
-const local_backend_href = "http://10.0.0.143:7777";
 
 const local_href = local_manage_backend_href+ "/equipmentmanagement";
 const local_login_success_page = local_manage_front_href+"/home";
